@@ -1,48 +1,52 @@
 const uuid = require('uuid').v4;
 const User = require('./resources/users/user.model');
+const Board = require('./resources/boards/board.model');
 
 const db = {
   users: [],
   tasks: [],
   boards: [],
 
-  post(body) { 
+  post(instanceOfClass, tableName) { 
 
-    const newUser = new User(body);
-    newUser.id = uuid();
-    db.users.push(newUser);
-    return newUser;
+    const entity = instanceOfClass;
+    entity.id = uuid();
+    db[tableName].push(entity);
+    return entity.id;
 
   },
 
-  getById(id) { 
+  getById(id, tableName) { 
     
-    const concreteUser = this.users.find((user) => user.id === id);
-    return concreteUser;
+    const concreteEntity = this[tableName].find((entity) => entity.id === id);
+    return concreteEntity;
   
   },
 
-  put(id, body) {
+  put(id, body, tableName) {
 
-    const concreteUser = this.users.find( (user) => user.id === id );
-    if (concreteUser !== -1) {
+    const concreteEntity = this[tableName].find((entity) => entity.id === id);
+    if (concreteEntity !== -1) {
 
-      if (body.name) concreteUser.name = body.name;
-      if (body.login) concreteUser.login = body.login;
-      if (body.password) concreteUser.password = body.password;
-      
+      // for users
+      if (body.name) concreteEntity.name = body.name;
+      if (body.login) concreteEntity.login = body.login;
+      if (body.password) concreteEntity.password = body.password;
+
+      // for boards
+      if (body.title) concreteEntity.title = body.title;
+      if (body.columns) concreteEntity.columns = body.columns;
+
     };
-    
-    return concreteUser;
+
+    return concreteEntity;
 
   },
 
-  remove(id) {
+  remove(id, tableName) {
 
-    const index = this.users.findIndex( (user) => user.id === id );
-    
-    if (index !== -1) this.users.splice(index, 1);
-
+    const index = this[tableName].findIndex((entity) => entity.id === id);
+    if (index !== -1) this[tableName].splice(index, 1);
     return index;
 
   }
@@ -50,13 +54,26 @@ const db = {
 };
 
 // init the db new 3 users for start
-(function initDb() {
+(function initUsers() {
 
   for (let i = 0; i < 3; i += 1) {
 
     const newUser = new User();
     newUser.id = uuid();
     db.users.push(newUser);
+
+  };
+
+})();
+
+// init the db new 3 boards for start
+(function initBoards() {
+
+  for (let i = 0; i < 3; i += 1) {
+
+    const newBoard = new Board();
+    newBoard.id = uuid();
+    db.boards.push(newBoard);
 
   };
 
