@@ -7,7 +7,7 @@ router.route('/').get(async (req, res) => {
   const users = await usersService.getAll();
 
   // map user fields to exclude secret fields like "password"
-  res.json(users.map(User.toResponse));
+  await res.json(users.map(User.toResponse));
 
 });
 
@@ -16,7 +16,7 @@ router.route('/').post(async (req, res) => {
   const user = await usersService.post(req.body);
 
   // to exclude secret fields like "password"
-  res.json(User.toResponse(user));
+  res.status(201).json(User.toResponse(user));
 
 });
 
@@ -26,6 +26,7 @@ router.route('/:id').get(async (req, res) => {
 
   // to exclude secret fields like "password"
   if (user !== -1) res.json(User.toResponse(user));
+
 
 });
 
@@ -41,7 +42,7 @@ router.route('/:id').put(async (req, res) => {
 router.route('/:id').delete(async (req, res) => {
 
   const index = await usersService.remove(req.params.id);
-  if (index !== -1) res.sendStatus(204);
+  if (index !== -1) res.status(204).send();
 
 });
 

@@ -12,32 +12,41 @@ const db = {
     }
   ],
   tasks: [
+    // {
+    //   id: uuid(),
+    //   title: 'firstTask',
+    //   order: 0,
+    //   description: 'firstTask description',
+    //   userId: '2',
+    //   boardId: '4',
+    //   columnId: 'inProgress'
+    // },
+    // {
+    //   id: uuid(),
+    //   title: 'secondTask',
+    //   order: 1,
+    //   description: 'secondTask description',
+    //   userId: '2',
+    //   boardId: '4',
+    //   columnId: 'blocked'
+    // },
+    // {
+    //   id: uuid(),
+    //   title: 'thirdTask',
+    //   order: 3,
+    //   description: 'thirdTask description',
+    //   userId: '1',
+    //   boardId: '4',
+    //   columnId: 'review'
+    // }
     {
-      id: uuid(),
-      title: 'firstTask',
+      title: 'Autotest task',
       order: 0,
-      description: 'firstTask description',
-      userId: '2',
-      boardId: '4',
-      columnId: 'inProgress'
-    },
-    {
-      id: uuid(),
-      title: 'secondTask',
-      order: 1,
-      description: 'secondTask description',
-      userId: '2',
-      boardId: '4',
-      columnId: 'blocked'
-    },
-    {
-      id: uuid(),
-      title: 'thirdTask',
-      order: 3,
-      description: 'thirdTask description',
-      userId: '1',
-      boardId: '4',
-      columnId: 'review'
+      description: 'Lorem ipsum',
+      userId: null,
+      boardId: '045d2c10-948c-40fa-a2ff-b25f73ac105e',
+      columnId: null,
+      id: '847fb184-2c79-42b7-b1d1-b888a91cd901'
     }
   ],
   boards: [
@@ -155,7 +164,6 @@ const db = {
     if (tableName !== 'tasks') this[`${tableName}Fix`](id);
 
     return index;
-
 
   }
 

@@ -29,9 +29,6 @@ const getById = async (id) => {
 
   const board = await db.getById(id, TABLE_NAME);
 
-  // Error if board not found
-  if (!board) throw new NOT_FOUND_ERROR(`Couldn't find a board with id: ${id}`);
-
   return board;
 
 };
@@ -41,13 +38,42 @@ const put = async (id, body) => {
   // instead of body.hasOwnPrototype, to avoid eslint's error "no-prototype-builtins"
   const hasBodyProperty = Object.prototype.hasOwnProperty.call(body, 'columns');
 
-  if (hasBodyProperty && body.columns.length > 0) body.columns.forEach((column) => {
+  // check is there a field "columns" in the request body
+  if (hasBodyProperty) {
 
-    // instead of column.id = uuid(), to avoid eslint's error "no-return-assign" and "no-param-reassign"
-    const tempTasksList = column;
-    tempTasksList.id = uuid();
+    // if it is, then check match with old columns in this board
+    const oldBorder = await getById(id);
 
-  });
+    body.columns.forEach((column) => {
+
+      // if there is the match (newTitle === oldTitle && newOrder === oldOrder),
+      // then copying id
+      oldBorder.columns.forEach((oldColumn) => {
+        if (column.title === oldColumn.title && column.order === oldColumn.order) {
+
+          // to avoid lint error "no-param-reassign"
+          const newColumn = column;
+          newColumn.id = oldColumn.id
+
+        };
+      });
+      
+      // else generating id for new columns
+      const hasColumnId = Object.prototype.hasOwnProperty.call(column, 'id');
+      
+      // weeds out identical columns
+      if (!hasColumnId) {
+
+        // to avoid lint error "no-param-reassign"
+        const newColumn = column;
+        newColumn.id = uuid();
+
+      };
+
+    });
+
+  };
+
   const board = await db.put(id, body, TABLE_NAME);
 
   // Error if board not found

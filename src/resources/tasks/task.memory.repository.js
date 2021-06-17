@@ -34,11 +34,6 @@ const getById = async (boardId, taskId) => {
 
   };
 
-  // Error if task not found
-  if (!oneTask[0] || oneTask[0].boardId !== boardId) throw new NOT_FOUND_ERROR(
-    `Couldn't find a task with id: ${taskId} on board: ${boardId}`
-  );
-
   return oneTask[0];
 
 };
