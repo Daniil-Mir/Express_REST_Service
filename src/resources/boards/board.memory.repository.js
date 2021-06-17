@@ -1,11 +1,12 @@
 const uuid = require('uuid').v4;  // need for generating id for child columns
 const db = require('../../db');
 const Board = require('./board.model');
+const NOT_FOUND_ERROR = require('../../errors/appError');
 
 // table's name in database
 const TABLE_NAME = 'boards';
 
-const getAll = async () => db[TABLE_NAME];
+const getAll = async () => db.getAll(TABLE_NAME);
 
 const post = async (body) => {
 
@@ -27,6 +28,10 @@ const post = async (body) => {
 const getById = async (id) => {
 
   const board = await db.getById(id, TABLE_NAME);
+
+  // Error if board not found
+  if (!board) throw new NOT_FOUND_ERROR(`Couldn't find a board with id: ${id}`);
+
   return board;
 
 };
@@ -44,14 +49,22 @@ const put = async (id, body) => {
 
   });
   const board = await db.put(id, body, TABLE_NAME);
+
+  // Error if board not found
+  if (!board) throw new NOT_FOUND_ERROR(`Couldn't find a board with id: ${id}`);
+
   return board;
 
 };
 
 const remove = async (id) => {
 
-  const result = await db.remove(id, TABLE_NAME);
-  return result;
+  const index = await db.remove(id, TABLE_NAME);
+
+    // Error if not task
+    if (index === -1) throw new NOT_FOUND_ERROR(`Couldn't find a board with id: ${id}`);
+
+  return index;
 
 }
 
